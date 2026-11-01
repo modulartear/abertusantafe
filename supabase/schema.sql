@@ -17,6 +17,17 @@ create table if not exists public.products (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.categories (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text unique not null,
+  sort_order integer not null default 0,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
+
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text,
@@ -29,13 +40,25 @@ returns boolean language sql stable security definer set search_path = public
 as $$ select exists (select 1 from public.profiles where id = auth.uid() and role in ('admin', 'editor')); $$;
 
 alter table public.products enable row level security;
+alter table public.categories enable row level security;
 alter table public.profiles enable row level security;
+
+insert into public.categories (name, slug, sort_order) values
+  ('Ventanas', 'ventanas', 1), ('Puertas', 'puertas', 2), ('Aluminio', 'aluminio', 3),
+  ('PVC', 'pvc', 4), ('Madera', 'madera', 5), ('Baño', 'bano', 6), ('Outlet', 'outlet', 7)
+on conflict (slug) do nothing;
 
 drop policy if exists "published products are public" on public.products;
 create policy "published products are public" on public.products for select using (published = true or public.is_staff());
 
 drop policy if exists "staff can manage products" on public.products;
 create policy "staff can manage products" on public.products for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "active categories are public" on public.categories;
+create policy "active categories are public" on public.categories for select using (active = true or public.is_staff());
+
+drop policy if exists "staff can manage categories" on public.categories;
+create policy "staff can manage categories" on public.categories for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "users can read own profile" on public.profiles;
 create policy "users can read own profile" on public.profiles for select using (id = auth.uid());

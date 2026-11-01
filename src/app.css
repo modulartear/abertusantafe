@@ -215,6 +215,10 @@
 .product-form .field-hint { color: var(--muted); font-size: 10px; font-weight: 400; }
 .product-form input[type="file"] { padding: 9px; cursor: pointer; }
 .file-count { color: #259b66; font-size: 11px; }
+.selected-images { margin-top: 9px; }
+.selected-image-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 8px; }
+.selected-image-grid img { width: 100%; aspect-ratio: 1; border-radius: 3px; object-fit: cover; border: 1px solid var(--line); }
+.existing-images-note { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .product-form .primary-link { width: 100%; margin-top: 20px; border: 0; background: var(--blue); color: white; text-align: center; cursor: pointer; }
 .product-form .primary-link:disabled { opacity: .6; cursor: wait; }

@@ -12,12 +12,18 @@ Deno.serve(async (request) => {
     if (authError || !requester) throw new Error("Sesión inválida");
     const { data: profile } = await adminClient.from("profiles").select("role").eq("id", requester.id).single();
     if (profile?.role !== "admin") throw new Error("Solo un administrador puede gestionar usuarios");
-    const { action, user_id, full_name, role } = await request.json();
-    if (!user_id || !["update", "delete"].includes(action)) throw new Error("Solicitud inválida");
+    const { action, user_id, full_name, role, redirect_to } = await request.json();
+    if (!user_id || !["update", "delete", "reset"].includes(action)) throw new Error("Solicitud inválida");
     if (action === "delete") {
       if (user_id === requester.id) throw new Error("No podés eliminar tu propio usuario");
       const { error } = await adminClient.auth.admin.deleteUser(user_id);
       if (error) throw error;
+    } else if (action === "reset") {
+      const { data: authUser, error: userError } = await adminClient.auth.admin.getUserById(user_id);
+      if (userError || !authUser.user?.email) throw userError || new Error("El usuario no tiene un email válido");
+      const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({ type: "recovery", email: authUser.user.email, options: { redirectTo: redirect_to } });
+      if (linkError) throw linkError;
+      return new Response(JSON.stringify({ ok: true, action_link: linkData.properties.action_link }), { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     } else {
       if (!full_name || !["admin", "editor"].includes(role)) throw new Error("Faltan datos del usuario");
       const { error: authUpdateError } = await adminClient.auth.admin.updateUserById(user_id, { user_metadata: { full_name } });

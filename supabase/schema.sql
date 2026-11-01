@@ -55,6 +55,28 @@ create table if not exists public.navigation_items (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.quotes (
+  id uuid primary key default gen_random_uuid(),
+  customer_name text not null,
+  customer_email text,
+  customer_phone text not null,
+  customer_address text,
+  delivery_method text not null default 'A coordinar',
+  notes text,
+  total numeric(12, 2) not null default 0,
+  status text not null default 'new' check (status in ('new', 'contacted', 'quoted', 'closed', 'cancelled')),
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.quote_items (
+  id uuid primary key default gen_random_uuid(),
+  quote_id uuid not null references public.quotes(id) on delete cascade,
+  product_id text,
+  product_name text not null,
+  quantity integer not null default 1 check (quantity > 0),
+  unit_price numeric(12, 2) not null default 0
+);
+
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
 
 create table if not exists public.profiles (
@@ -72,6 +94,8 @@ alter table public.products enable row level security;
 alter table public.categories enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.navigation_items enable row level security;
+alter table public.quotes enable row level security;
+alter table public.quote_items enable row level security;
 alter table public.profiles enable row level security;
 
 insert into public.categories (name, slug, sort_order) values
@@ -109,6 +133,18 @@ create policy "active navigation is public" on public.navigation_items for selec
 
 drop policy if exists "staff can manage navigation" on public.navigation_items;
 create policy "staff can manage navigation" on public.navigation_items for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "anyone can create quotes" on public.quotes;
+create policy "anyone can create quotes" on public.quotes for insert with check (true);
+
+drop policy if exists "staff can manage quotes" on public.quotes;
+create policy "staff can manage quotes" on public.quotes for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "anyone can add quote items" on public.quote_items;
+create policy "anyone can add quote items" on public.quote_items for insert with check (true);
+
+drop policy if exists "staff can manage quote items" on public.quote_items;
+create policy "staff can manage quote items" on public.quote_items for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "users can read own profile" on public.profiles;
 create policy "users can read own profile" on public.profiles for select using (id = auth.uid());

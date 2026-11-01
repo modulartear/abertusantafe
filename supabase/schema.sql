@@ -8,6 +8,8 @@ create table if not exists public.products (
   price numeric(12, 2) not null default 0,
   old_price numeric(12, 2),
   description text not null default '',
+  delivery_info text not null default 'Retiro en local o envío a coordinar',
+  promo_text text,
   image_url text,
   image_urls text[] not null default '{}',
   badge text,

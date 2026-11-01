@@ -28,6 +28,33 @@ create table if not exists public.categories (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.site_settings (
+  id integer primary key default 1 check (id = 1),
+  business_name text not null default 'Santa Fe Aberturas',
+  logo_url text,
+  phone text,
+  whatsapp text,
+  email text,
+  address text,
+  schedule text,
+  hero_badge text default 'Nuevo stock',
+  hero_title text default 'Santa Fe Aberturas',
+  hero_subtitle text default 'La abertura que estás buscando, lista para transformar tu espacio.',
+  hero_image_url text,
+  contact_title text default 'Consultá por medidas, stock y formas de pago.',
+  contact_subtitle text default 'Te respondemos con opciones disponibles en el local.',
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.navigation_items (
+  id uuid primary key default gen_random_uuid(),
+  label text not null,
+  href text not null default '#productos',
+  sort_order integer not null default 0,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
 
 create table if not exists public.profiles (
@@ -43,12 +70,21 @@ as $$ select exists (select 1 from public.profiles where id = auth.uid() and rol
 
 alter table public.products enable row level security;
 alter table public.categories enable row level security;
+alter table public.site_settings enable row level security;
+alter table public.navigation_items enable row level security;
 alter table public.profiles enable row level security;
 
 insert into public.categories (name, slug, sort_order) values
   ('Ventanas', 'ventanas', 1), ('Puertas', 'puertas', 2), ('Aluminio', 'aluminio', 3),
   ('PVC', 'pvc', 4), ('Madera', 'madera', 5), ('Baño', 'bano', 6), ('Outlet', 'outlet', 7)
 on conflict (slug) do nothing;
+
+insert into public.site_settings (id) values (1) on conflict (id) do nothing;
+
+insert into public.navigation_items (label, href, sort_order)
+select seed.label, seed.href, seed.sort_order
+from (values ('Inicio', '#inicio', 1), ('Productos', '#productos', 2), ('Contacto', '#contacto', 3)) as seed(label, href, sort_order)
+where not exists (select 1 from public.navigation_items existing where existing.label = seed.label and existing.href = seed.href);
 
 drop policy if exists "published products are public" on public.products;
 create policy "published products are public" on public.products for select using (published = true or public.is_staff());
@@ -61,6 +97,18 @@ create policy "active categories are public" on public.categories for select usi
 
 drop policy if exists "staff can manage categories" on public.categories;
 create policy "staff can manage categories" on public.categories for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "site settings are public" on public.site_settings;
+create policy "site settings are public" on public.site_settings for select using (true);
+
+drop policy if exists "staff can manage site settings" on public.site_settings;
+create policy "staff can manage site settings" on public.site_settings for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "active navigation is public" on public.navigation_items;
+create policy "active navigation is public" on public.navigation_items for select using (active = true or public.is_staff());
+
+drop policy if exists "staff can manage navigation" on public.navigation_items;
+create policy "staff can manage navigation" on public.navigation_items for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "users can read own profile" on public.profiles;
 create policy "users can read own profile" on public.profiles for select using (id = auth.uid());
@@ -77,6 +125,10 @@ insert into storage.buckets (id, name, public)
 values ('product-images', 'product-images', true)
 on conflict (id) do update set public = true;
 
+insert into storage.buckets (id, name, public)
+values ('site-assets', 'site-assets', true)
+on conflict (id) do update set public = true;
+
 drop policy if exists "public can view product images" on storage.objects;
 create policy "public can view product images" on storage.objects for select using (bucket_id = 'product-images');
 
@@ -88,5 +140,14 @@ create policy "staff can update product images" on storage.objects for update us
 
 drop policy if exists "staff can delete product images" on storage.objects;
 create policy "staff can delete product images" on storage.objects for delete using (bucket_id = 'product-images' and public.is_staff());
+
+drop policy if exists "public can view site assets" on storage.objects;
+create policy "public can view site assets" on storage.objects for select using (bucket_id = 'site-assets');
+
+drop policy if exists "staff can upload site assets" on storage.objects;
+create policy "staff can upload site assets" on storage.objects for insert with check (bucket_id = 'site-assets' and public.is_staff());
+
+drop policy if exists "staff can update site assets" on storage.objects;
+create policy "staff can update site assets" on storage.objects for update using (bucket_id = 'site-assets' and public.is_staff());
 
 alter table public.products add column if not exists image_urls text[] not null default '{}';

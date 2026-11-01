@@ -9,6 +9,7 @@ create table if not exists public.products (
   old_price numeric(12, 2),
   description text not null default '',
   image_url text,
+  image_urls text[] not null default '{}',
   badge text,
   published boolean not null default true,
   stock integer not null default 0,
@@ -45,3 +46,22 @@ as $$ begin insert into public.profiles (id, full_name) values (new.id, coalesce
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users for each row execute procedure public.handle_new_user();
+
+-- Storage para las imágenes del catálogo.
+insert into storage.buckets (id, name, public)
+values ('product-images', 'product-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "public can view product images" on storage.objects;
+create policy "public can view product images" on storage.objects for select using (bucket_id = 'product-images');
+
+drop policy if exists "staff can upload product images" on storage.objects;
+create policy "staff can upload product images" on storage.objects for insert with check (bucket_id = 'product-images' and public.is_staff());
+
+drop policy if exists "staff can update product images" on storage.objects;
+create policy "staff can update product images" on storage.objects for update using (bucket_id = 'product-images' and public.is_staff());
+
+drop policy if exists "staff can delete product images" on storage.objects;
+create policy "staff can delete product images" on storage.objects for delete using (bucket_id = 'product-images' and public.is_staff());
+
+alter table public.products add column if not exists image_urls text[] not null default '{}';

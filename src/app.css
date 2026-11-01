@@ -76,6 +76,9 @@
 .product-form label { display: grid; gap: 7px; margin-top: 14px; color: var(--ink); font-size: 11px; font-weight: 800; }
 .product-form input, .product-form select, .product-form textarea { width: 100%; padding: 11px; border: 1px solid var(--line); border-radius: 4px; outline: none; resize: vertical; }
 .product-form input:focus, .product-form select:focus, .product-form textarea:focus { border-color: var(--blue); }
+.product-form .field-hint { color: var(--muted); font-size: 10px; font-weight: 400; }
+.product-form input[type="file"] { padding: 9px; cursor: pointer; }
+.file-count { color: #259b66; font-size: 11px; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .product-form .primary-link { width: 100%; margin-top: 20px; border: 0; background: var(--blue); color: white; text-align: center; cursor: pointer; }
 .product-form .primary-link:disabled { opacity: .6; cursor: wait; }

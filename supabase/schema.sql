@@ -78,6 +78,8 @@ create table if not exists public.quote_items (
 );
 
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
+alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
+alter table public.products add column if not exists promo_text text;
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,

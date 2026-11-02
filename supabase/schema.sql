@@ -123,6 +123,13 @@ create table if not exists public.quote_items (
   unit_price numeric(12, 2) not null default 0
 );
 
+create table if not exists public.quote_rate_limits (
+  client_hash text primary key,
+  window_started timestamptz not null default now(),
+  request_count integer not null default 0,
+  updated_at timestamptz not null default now()
+);
+
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
 alter table public.products add column if not exists brand_id uuid references public.brands(id) on delete set null;
 alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
@@ -226,13 +233,11 @@ drop policy if exists "staff can manage navigation" on public.navigation_items;
 create policy "staff can manage navigation" on public.navigation_items for all using (public.is_admin()) with check (public.is_admin());
 
 drop policy if exists "anyone can create quotes" on public.quotes;
-create policy "anyone can create quotes" on public.quotes for insert with check (true);
 
 drop policy if exists "staff can manage quotes" on public.quotes;
 create policy "staff can manage quotes" on public.quotes for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "anyone can add quote items" on public.quote_items;
-create policy "anyone can add quote items" on public.quote_items for insert with check (true);
 
 drop policy if exists "staff can manage quote items" on public.quote_items;
 create policy "staff can manage quote items" on public.quote_items for all using (public.is_staff()) with check (public.is_staff());
@@ -294,3 +299,4 @@ drop policy if exists "staff can update brand assets" on storage.objects;
 create policy "staff can update brand assets" on storage.objects for update using (bucket_id = 'brand-assets' and public.is_staff());
 
 alter table public.products add column if not exists image_urls text[] not null default '{}';
+alter table public.quote_rate_limits enable row level security;

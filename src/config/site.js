@@ -2,6 +2,7 @@
 // En producción, estos valores se reemplazan por los de Supabase > site_settings.
 export const defaultSettings = {
   business_name: "Santa Fe Aberturas",
+  theme: "modern",
   logo_url: "/assets/santa-fe-aberturas-logo.png",
   phone: "",
   whatsapp: "",

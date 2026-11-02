@@ -31,6 +31,7 @@ create table if not exists public.categories (
 create table if not exists public.site_settings (
   id integer primary key default 1 check (id = 1),
   business_name text not null default 'Santa Fe Aberturas',
+  theme text not null default 'modern',
   logo_url text,
   phone text,
   whatsapp text,
@@ -85,6 +86,7 @@ alter table public.products add column if not exists category_id uuid references
 alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
 alter table public.products add column if not exists promo_text text;
 alter table public.site_settings add column if not exists primary_color text default '#0054d6';
+alter table public.site_settings add column if not exists theme text not null default 'modern';
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';

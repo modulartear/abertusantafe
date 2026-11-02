@@ -145,13 +145,13 @@ drop policy if exists "site settings are public" on public.site_settings;
 create policy "site settings are public" on public.site_settings for select using (true);
 
 drop policy if exists "staff can manage site settings" on public.site_settings;
-create policy "staff can manage site settings" on public.site_settings for all using (public.is_staff()) with check (public.is_staff());
+create policy "staff can manage site settings" on public.site_settings for all using (public.is_admin()) with check (public.is_admin());
 
 drop policy if exists "active navigation is public" on public.navigation_items;
 create policy "active navigation is public" on public.navigation_items for select using (active = true or public.is_staff());
 
 drop policy if exists "staff can manage navigation" on public.navigation_items;
-create policy "staff can manage navigation" on public.navigation_items for all using (public.is_staff()) with check (public.is_staff());
+create policy "staff can manage navigation" on public.navigation_items for all using (public.is_admin()) with check (public.is_admin());
 
 drop policy if exists "anyone can create quotes" on public.quotes;
 create policy "anyone can create quotes" on public.quotes for insert with check (true);

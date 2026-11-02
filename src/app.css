@@ -72,6 +72,17 @@
 .detail-bottom p { color: var(--muted); line-height: 1.7; }
 .not-found { min-height: 55vh; display: grid; place-content: center; gap: 18px; text-align: center; }
 .not-found a { color: var(--blue); font-weight: 800; }
+.settings-lock-page { min-height: 100vh; display: grid; place-items: center; padding: 25px; background: var(--soft); }
+.settings-lock-modal { width: min(440px, 100%); padding: 38px; border: 1px solid var(--line); background: white; box-shadow: var(--shadow); }
+.lock-icon { display: grid; width: 44px; height: 44px; place-items: center; margin-bottom: 18px; border-radius: 50%; color: white; background: var(--blue); font-size: 24px; }
+.settings-lock-modal h1 { margin: 11px 0 8px; font-size: 28px; }
+.settings-lock-modal > p { margin-bottom: 24px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.settings-lock-modal form { display: grid; gap: 14px; }
+.settings-lock-modal label { display: grid; gap: 7px; font-size: 11px; font-weight: 800; }
+.settings-lock-modal input { padding: 12px; border: 1px solid var(--line); outline: none; }
+.settings-lock-modal button { min-height: 45px; border: 0; color: white; background: var(--blue); cursor: pointer; font-weight: 800; }
+.settings-lock-modal button:disabled { opacity: .6; cursor: wait; }
+.settings-lock-modal > a { display: block; margin-top: 20px; color: var(--blue); font-size: 12px; font-weight: 800; text-align: center; text-decoration: none; }
 .minimal-theme { color: var(--ink); }
 .minimal-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; width: min(1220px, calc(100% - 32px)); min-height: 520px; margin: 0 auto; padding: 70px 0; }
 .minimal-hero h1 { max-width: 590px; margin: 15px 0; font-size: clamp(42px, 6vw, 78px); line-height: .98; letter-spacing: -.07em; }

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { categoryLabels, formatCurrency, products } from "./data/products";
 import { supabase, supabaseConfigured } from "./lib/supabase";
+import { defaultNavigation, defaultSettings } from "./config/site";
 
 const categories = ["todos", "puertas", "ventanas", "aluminio", "pvc", "madera", "bano", "outlet"];
-const defaultSettings = { business_name: "Santa Fe Aberturas", logo_url: "/assets/santa-fe-aberturas-logo.png", phone: "", whatsapp: "", email: "", address: "Santa Fe, Argentina", schedule: "Lunes a viernes de 8 a 18 hs", hero_badge: "Nuevo stock", hero_title: "Santa Fe Aberturas", hero_subtitle: "La abertura que estás buscando, lista para transformar tu espacio.", hero_image_url: "", contact_title: "Consultá por medidas, stock y formas de pago.", contact_subtitle: "Te respondemos con opciones disponibles en el local." };
 
 function useCart() {
   const [cart, setCart] = useState(() => { const saved = JSON.parse(localStorage.getItem("santaFeCart") || "{}"); return Object.fromEntries(Object.entries(saved).map(([id, value]) => [id, typeof value === "number" ? { product: products.find((product) => product.id === id), quantity: value } : value]).filter(([, value]) => value?.product)); });
@@ -17,7 +17,7 @@ function useCart() {
 
 function Header({ onCart, count, search, setSearch, settings = defaultSettings, navigation = [] }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const menu = navigation.length ? navigation : [{ label: "Inicio", href: "#inicio" }, { label: "Productos", href: "#productos" }, { label: "Contacto", href: "#contacto" }];
+  const menu = navigation.length ? navigation : defaultNavigation;
   function menuHref(item) { const href = (item.href || "#productos").trim(); return href.startsWith("#") || href.startsWith("/") || href.startsWith("http") || href.startsWith("mailto:") ? href : `#${href}`; }
   function navigate(event, item) { const href = menuHref(item); setMenuOpen(false); if (!href.startsWith("#")) return; const target = document.querySelector(href); if (target) { event.preventDefault(); target.scrollIntoView({ behavior: "smooth", block: "start" }); } else { event.preventDefault(); window.location.href = `/${href}`; } }
   return <><div className="top-strip"><span>{settings.phone || "PARA VENTAS Y CONSULTAS"}</span><span>{settings.schedule || "AMPLIO STOCK EN LOCAL"}</span><span>ABERTURAS DE ALUMINIO, PVC Y MADERA</span></div><header className="site-header"><button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menú">☰</button><a className="brand" href="#inicio"><img src={settings.logo_url || defaultSettings.logo_url} alt={settings.business_name} /></a><div className="search-box"><input value={setSearch ? (search || "") : undefined} onChange={(event) => setSearch?.(event.target.value)} placeholder="Buscar productos" /><button>⌕</button></div><button className="cart-button" onClick={onCart}>🛒<span>{count}</span></button></header><nav className={`main-nav ${menuOpen ? "open" : ""}`}>{menu.map((item) => <a key={item.id || item.label} href={menuHref(item)} onClick={(event) => navigate(event, item)}>{item.label}</a>)}<a href="/admin/login" onClick={() => setMenuOpen(false)}>Administrar</a></nav></>;

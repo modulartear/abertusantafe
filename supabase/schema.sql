@@ -43,6 +43,10 @@ create table if not exists public.site_settings (
   hero_image_url text,
   contact_title text default 'Consultá por medidas, stock y formas de pago.',
   contact_subtitle text default 'Te respondemos con opciones disponibles en el local.',
+  primary_color text default '#0054d6',
+  secondary_color text default '#003f9f',
+  accent_color text default '#f7941d',
+  danger_color text default '#e5342f',
   updated_at timestamptz not null default now()
 );
 
@@ -80,6 +84,10 @@ create table if not exists public.quote_items (
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
 alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
 alter table public.products add column if not exists promo_text text;
+alter table public.site_settings add column if not exists primary_color text default '#0054d6';
+alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
+alter table public.site_settings add column if not exists accent_color text default '#f7941d';
+alter table public.site_settings add column if not exists danger_color text default '#e5342f';
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,

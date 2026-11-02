@@ -14,6 +14,10 @@ export const defaultSettings = {
   hero_image_url: "",
   contact_title: "Consultá por medidas, stock y formas de pago.",
   contact_subtitle: "Te respondemos con opciones disponibles en el local.",
+  primary_color: "#0054d6",
+  secondary_color: "#003f9f",
+  accent_color: "#f7941d",
+  danger_color: "#e5342f",
 };
 
 export const defaultNavigation = [

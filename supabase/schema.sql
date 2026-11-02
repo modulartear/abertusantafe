@@ -44,6 +44,7 @@ create table if not exists public.site_settings (
   theme text not null default 'modern',
   brands_enabled boolean not null default true,
   map_enabled boolean not null default true,
+  promotions_enabled boolean not null default true,
   top_bar_enabled boolean not null default true,
   top_bar_text text,
   promotion_enabled boolean not null default false,
@@ -131,6 +132,7 @@ alter table public.site_settings add column if not exists primary_color text def
 alter table public.site_settings add column if not exists theme text not null default 'modern';
 alter table public.site_settings add column if not exists brands_enabled boolean not null default true;
 alter table public.site_settings add column if not exists map_enabled boolean not null default true;
+alter table public.site_settings add column if not exists promotions_enabled boolean not null default true;
 alter table public.site_settings add column if not exists top_bar_enabled boolean not null default true;
 alter table public.site_settings add column if not exists top_bar_text text;
 alter table public.site_settings add column if not exists promotion_enabled boolean not null default false;

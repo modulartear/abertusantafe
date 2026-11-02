@@ -366,3 +366,13 @@
 @media (max-width: 650px) { .whatsapp-float { right: 16px; bottom: 16px; width: 53px; height: 53px; } .whatsapp-tooltip { display: none; } }
 @media (max-width: 650px) { .main-nav { display: none; } .main-nav.open { display: flex; position: absolute; top: 156px; left: 0; right: 0; flex-direction: column; align-items: stretch; min-height: auto; padding: 8px 16px 14px; box-shadow: var(--shadow); } .main-nav.open a { min-height: 42px; } }
 @media (max-width: 430px) { .product-grid { grid-template-columns: 1fr; } .metric-grid { grid-template-columns: 1fr; } }
+.access-denied-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f4f4f4; padding: 24px; }
+.access-denied-inner { max-width: 560px; text-align: center; }
+.access-denied-icon { width: 104px; height: 104px; margin: 0 auto 30px; border-radius: 50%; background: #c62828; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 54px; font-weight: 700; line-height: 1; user-select: none; }
+.access-denied-inner h1 { font-size: 40px; font-weight: 600; color: #4b4b4b; margin: 0 0 18px; }
+.access-denied-inner p { font-size: 18px; color: #6b6b6b; margin: 0 0 10px; }
+.access-denied-code { margin-top: 26px; font-size: 14px; color: #8a8a8a; }
+.access-denied-code strong { color: #5a5a5a; font-weight: 700; }
+.access-denied-actions { display: flex; gap: 14px; justify-content: center; margin-top: 34px; }
+.access-denied-actions a { font-size: 14px; color: #4b4b4b; text-decoration: none; border: 1px solid #d4d4d4; background: #fff; padding: 9px 18px; border-radius: 8px; transition: border-color 0.2s, color 0.2s; }
+.access-denied-actions a:hover { border-color: #c62828; color: #c62828; }

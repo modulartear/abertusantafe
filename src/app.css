@@ -110,6 +110,10 @@
 .settings-form input, .settings-form textarea, .menu-row input, .add-menu-row input { width: 100%; padding: 11px; border: 1px solid var(--line); border-radius: 4px; outline: none; resize: vertical; }
 .settings-form input:focus, .settings-form textarea:focus, .menu-row input:focus, .add-menu-row input:focus { border-color: var(--blue); }
 .settings-preview { display: block; margin-top: 12px; border: 1px solid var(--line); object-fit: cover; }
+.settings-helper { margin: -8px 0 14px; color: var(--muted); font-size: 12px; }
+.color-settings { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.color-settings label { margin-top: 0; }
+.color-settings input[type="color"] { height: 42px; padding: 3px; cursor: pointer; }
 .logo-preview { width: 150px; height: 70px; padding: 8px; object-fit: contain; }
 .hero-preview { width: 100%; height: 130px; }
 .form-message { padding: 11px 13px; color: #20794e; background: #eaf8f0; font-size: 12px; }

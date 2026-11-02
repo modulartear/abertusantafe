@@ -5,7 +5,7 @@ export default function PromotionModule({ settings = {} }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    setModalOpen(Boolean(available && settings.promotion_modal_enabled));
+    setModalOpen(Boolean(available && settings.promotion_modal_enabled !== false));
   }, [available, settings.promotion_modal_enabled, settings.promotion_image_url]);
 
   if (!available) return null;

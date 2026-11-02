@@ -3,6 +3,7 @@
 export const defaultSettings = {
   business_name: "Santa Fe Aberturas",
   theme: "modern",
+  brands_enabled: true,
   logo_url: "/assets/santa-fe-aberturas-logo.png",
   phone: "",
   whatsapp: "",

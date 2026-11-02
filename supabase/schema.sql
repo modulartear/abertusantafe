@@ -28,10 +28,21 @@ create table if not exists public.categories (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.brands (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text unique not null,
+  logo_url text,
+  sort_order integer not null default 0,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.site_settings (
   id integer primary key default 1 check (id = 1),
   business_name text not null default 'Santa Fe Aberturas',
   theme text not null default 'modern',
+  brands_enabled boolean not null default true,
   logo_url text,
   phone text,
   whatsapp text,
@@ -83,10 +94,12 @@ create table if not exists public.quote_items (
 );
 
 alter table public.products add column if not exists category_id uuid references public.categories(id) on delete set null;
+alter table public.products add column if not exists brand_id uuid references public.brands(id) on delete set null;
 alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
 alter table public.products add column if not exists promo_text text;
 alter table public.site_settings add column if not exists primary_color text default '#0054d6';
 alter table public.site_settings add column if not exists theme text not null default 'modern';
+alter table public.site_settings add column if not exists brands_enabled boolean not null default true;
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';
@@ -111,6 +124,7 @@ as $$ select exists (select 1 from public.profiles where id = auth.uid() and rol
 
 alter table public.products enable row level security;
 alter table public.categories enable row level security;
+alter table public.brands enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.navigation_items enable row level security;
 alter table public.quotes enable row level security;
@@ -140,6 +154,12 @@ create policy "active categories are public" on public.categories for select usi
 
 drop policy if exists "staff can manage categories" on public.categories;
 create policy "staff can manage categories" on public.categories for all using (public.is_staff()) with check (public.is_staff());
+
+drop policy if exists "active brands are public" on public.brands;
+create policy "active brands are public" on public.brands for select using (active = true or public.is_staff());
+
+drop policy if exists "staff can manage brands" on public.brands;
+create policy "staff can manage brands" on public.brands for all using (public.is_staff()) with check (public.is_staff());
 
 drop policy if exists "site settings are public" on public.site_settings;
 create policy "site settings are public" on public.site_settings for select using (true);
@@ -187,6 +207,10 @@ insert into storage.buckets (id, name, public)
 values ('site-assets', 'site-assets', true)
 on conflict (id) do update set public = true;
 
+insert into storage.buckets (id, name, public)
+values ('brand-assets', 'brand-assets', true)
+on conflict (id) do update set public = true;
+
 drop policy if exists "public can view product images" on storage.objects;
 create policy "public can view product images" on storage.objects for select using (bucket_id = 'product-images');
 
@@ -207,5 +231,14 @@ create policy "staff can upload site assets" on storage.objects for insert with 
 
 drop policy if exists "staff can update site assets" on storage.objects;
 create policy "staff can update site assets" on storage.objects for update using (bucket_id = 'site-assets' and public.is_staff());
+
+drop policy if exists "public can view brand assets" on storage.objects;
+create policy "public can view brand assets" on storage.objects for select using (bucket_id = 'brand-assets');
+
+drop policy if exists "staff can upload brand assets" on storage.objects;
+create policy "staff can upload brand assets" on storage.objects for insert with check (bucket_id = 'brand-assets' and public.is_staff());
+
+drop policy if exists "staff can update brand assets" on storage.objects;
+create policy "staff can update brand assets" on storage.objects for update using (bucket_id = 'brand-assets' and public.is_staff());
 
 alter table public.products add column if not exists image_urls text[] not null default '{}';

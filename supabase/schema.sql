@@ -44,6 +44,15 @@ create table if not exists public.site_settings (
   theme text not null default 'modern',
   brands_enabled boolean not null default true,
   map_enabled boolean not null default true,
+  top_bar_enabled boolean not null default true,
+  top_bar_text text,
+  promotion_enabled boolean not null default false,
+  promotion_modal_enabled boolean not null default true,
+  promotion_image_url text,
+  promotion_title text,
+  promotion_text text,
+  promotion_button_label text default 'Ver promoción',
+  promotion_link text default '#productos',
   logo_url text,
   phone text,
   whatsapp text,
@@ -104,6 +113,15 @@ alter table public.site_settings add column if not exists primary_color text def
 alter table public.site_settings add column if not exists theme text not null default 'modern';
 alter table public.site_settings add column if not exists brands_enabled boolean not null default true;
 alter table public.site_settings add column if not exists map_enabled boolean not null default true;
+alter table public.site_settings add column if not exists top_bar_enabled boolean not null default true;
+alter table public.site_settings add column if not exists top_bar_text text;
+alter table public.site_settings add column if not exists promotion_enabled boolean not null default false;
+alter table public.site_settings add column if not exists promotion_modal_enabled boolean not null default true;
+alter table public.site_settings add column if not exists promotion_image_url text;
+alter table public.site_settings add column if not exists promotion_title text;
+alter table public.site_settings add column if not exists promotion_text text;
+alter table public.site_settings add column if not exists promotion_button_label text default 'Ver promoción';
+alter table public.site_settings add column if not exists promotion_link text default '#productos';
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';

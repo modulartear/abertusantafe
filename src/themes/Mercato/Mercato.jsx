@@ -13,6 +13,7 @@ export default function Mercato(props) {
     WhatsAppButton,
     BrandsStrip,
     BusinessMap,
+    PromotionModule,
     Cart,
     cart,
     cartOpen,
@@ -169,6 +170,8 @@ export default function Mercato(props) {
             )}
           </div>
         </section>
+
+        <PromotionModule settings={settings} />
 
         {/* 6. Marcas (opcional) */}
         {settings.brands_enabled && (

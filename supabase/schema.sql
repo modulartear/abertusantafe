@@ -43,6 +43,7 @@ create table if not exists public.site_settings (
   business_name text not null default 'Santa Fe Aberturas',
   theme text not null default 'modern',
   brands_enabled boolean not null default true,
+  map_enabled boolean not null default true,
   logo_url text,
   phone text,
   whatsapp text,
@@ -102,6 +103,7 @@ alter table public.site_settings add column if not exists map_query text;
 alter table public.site_settings add column if not exists primary_color text default '#0054d6';
 alter table public.site_settings add column if not exists theme text not null default 'modern';
 alter table public.site_settings add column if not exists brands_enabled boolean not null default true;
+alter table public.site_settings add column if not exists map_enabled boolean not null default true;
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';

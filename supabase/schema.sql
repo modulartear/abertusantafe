@@ -84,6 +84,22 @@ create table if not exists public.navigation_items (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.promotions (
+  id uuid primary key default gen_random_uuid(),
+  title text not null default '',
+  description text not null default '',
+  image_url text,
+  button_label text not null default 'Ver promoción',
+  product_id uuid references public.products(id) on delete set null,
+  link text not null default '#productos',
+  active boolean not null default true,
+  modal_enabled boolean not null default true,
+  modal_interval integer not null default 0,
+  sort_order integer not null default 0,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.quotes (
   id uuid primary key default gen_random_uuid(),
   customer_name text not null,
@@ -126,6 +142,7 @@ alter table public.site_settings add column if not exists promotion_text text;
 alter table public.site_settings add column if not exists promotion_button_label text default 'Ver promoción';
 alter table public.site_settings add column if not exists promotion_link text default '#productos';
 alter table public.site_settings add column if not exists promotion_product_id uuid references public.products(id) on delete set null;
+
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';
@@ -156,6 +173,13 @@ alter table public.navigation_items enable row level security;
 alter table public.quotes enable row level security;
 alter table public.quote_items enable row level security;
 alter table public.profiles enable row level security;
+alter table public.promotions enable row level security;
+
+drop policy if exists "active promotions are public" on public.promotions;
+create policy "active promotions are public" on public.promotions for select using (active = true or public.is_staff());
+
+drop policy if exists "staff can manage promotions" on public.promotions;
+create policy "staff can manage promotions" on public.promotions for all using (public.is_staff()) with check (public.is_staff());
 
 insert into public.categories (name, slug, sort_order) values
   ('Ventanas', 'ventanas', 1), ('Puertas', 'puertas', 2), ('Aluminio', 'aluminio', 3),

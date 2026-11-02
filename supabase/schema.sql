@@ -53,6 +53,7 @@ create table if not exists public.site_settings (
   promotion_text text,
   promotion_button_label text default 'Ver promoción',
   promotion_link text default '#productos',
+  promotion_product_id uuid references public.products(id) on delete set null,
   logo_url text,
   phone text,
   whatsapp text,
@@ -122,6 +123,7 @@ alter table public.site_settings add column if not exists promotion_title text;
 alter table public.site_settings add column if not exists promotion_text text;
 alter table public.site_settings add column if not exists promotion_button_label text default 'Ver promoción';
 alter table public.site_settings add column if not exists promotion_link text default '#productos';
+alter table public.site_settings add column if not exists promotion_product_id uuid references public.products(id) on delete set null;
 alter table public.site_settings add column if not exists secondary_color text default '#003f9f';
 alter table public.site_settings add column if not exists accent_color text default '#f7941d';
 alter table public.site_settings add column if not exists danger_color text default '#e5342f';

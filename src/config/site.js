@@ -14,6 +14,7 @@ export const defaultSettings = {
   promotion_text: "",
   promotion_button_label: "Ver promoción",
   promotion_link: "#productos",
+  promotion_product_id: "",
   logo_url: "/assets/santa-fe-aberturas-logo.png",
   phone: "",
   whatsapp: "",

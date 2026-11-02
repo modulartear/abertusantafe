@@ -48,6 +48,7 @@ create table if not exists public.site_settings (
   top_bar_text text,
   promotion_enabled boolean not null default false,
   promotion_modal_enabled boolean not null default true,
+  promotion_modal_interval integer not null default 0,
   promotion_image_url text,
   promotion_title text,
   promotion_text text,
@@ -118,6 +119,7 @@ alter table public.site_settings add column if not exists top_bar_enabled boolea
 alter table public.site_settings add column if not exists top_bar_text text;
 alter table public.site_settings add column if not exists promotion_enabled boolean not null default false;
 alter table public.site_settings add column if not exists promotion_modal_enabled boolean not null default true;
+alter table public.site_settings add column if not exists promotion_modal_interval integer not null default 0;
 alter table public.site_settings add column if not exists promotion_image_url text;
 alter table public.site_settings add column if not exists promotion_title text;
 alter table public.site_settings add column if not exists promotion_text text;

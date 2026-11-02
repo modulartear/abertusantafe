@@ -9,6 +9,7 @@ export const defaultSettings = {
   top_bar_text: "",
   promotion_enabled: false,
   promotion_modal_enabled: true,
+  promotion_modal_interval: 0,
   promotion_image_url: "",
   promotion_title: "",
   promotion_text: "",

@@ -5,8 +5,15 @@ export default function PromotionModule({ settings = {} }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    setModalOpen(Boolean(available && settings.promotion_modal_enabled !== false));
-  }, [available, settings.promotion_modal_enabled, settings.promotion_image_url]);
+    if (!available || settings.promotion_modal_enabled === false) { setModalOpen(false); return undefined; }
+    const intervalMinutes = Math.max(0, Number(settings.promotion_modal_interval) || 0);
+    const storageKey = "santaFePromotionLastShown";
+    const lastShown = Number(window.localStorage.getItem(storageKey) || 0);
+    const wait = intervalMinutes > 0 && lastShown ? Math.max(0, intervalMinutes * 60000 - (Date.now() - lastShown)) : 0;
+    const show = () => { window.localStorage.setItem(storageKey, String(Date.now())); setModalOpen(true); };
+    const timer = wait > 0 ? window.setTimeout(show, wait) : show();
+    return () => { if (timer) window.clearTimeout(timer); };
+  }, [available, settings.promotion_modal_enabled, settings.promotion_modal_interval, settings.promotion_image_url]);
 
   if (!available) return null;
   const link = settings.promotion_link || "#productos";

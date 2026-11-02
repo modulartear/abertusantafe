@@ -268,11 +268,13 @@ export default function Mercato(props) {
       </footer>
 
       {/* 5. Carrito del sistema */}
-      <Cart
-        cart={cart}
-        close={() => setCartOpen(false)}
-        settings={settings}
-      />
+      {cartOpen && (
+        <Cart
+          cart={cart}
+          close={() => setCartOpen(false)}
+          settings={settings}
+        />
+      )}
 
       {/* 9. WhatsApp */}
       <WhatsAppButton number={settings.whatsapp} />

@@ -48,6 +48,7 @@ create table if not exists public.site_settings (
   whatsapp text,
   email text,
   address text,
+  map_query text,
   schedule text,
   hero_badge text default 'Nuevo stock',
   hero_title text default 'Santa Fe Aberturas',
@@ -97,6 +98,7 @@ alter table public.products add column if not exists category_id uuid references
 alter table public.products add column if not exists brand_id uuid references public.brands(id) on delete set null;
 alter table public.products add column if not exists delivery_info text not null default 'Retiro en local o envío a coordinar';
 alter table public.products add column if not exists promo_text text;
+alter table public.site_settings add column if not exists map_query text;
 alter table public.site_settings add column if not exists primary_color text default '#0054d6';
 alter table public.site_settings add column if not exists theme text not null default 'modern';
 alter table public.site_settings add column if not exists brands_enabled boolean not null default true;

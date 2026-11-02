@@ -9,6 +9,7 @@ export const defaultSettings = {
   whatsapp: "",
   email: "",
   address: "Santa Fe, Argentina",
+  map_query: "Santa Fe, Argentina",
   schedule: "Lunes a viernes de 8 a 18 hs",
   hero_badge: "Nuevo stock",
   hero_title: "Santa Fe Aberturas",

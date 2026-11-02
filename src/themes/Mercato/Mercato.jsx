@@ -1,4 +1,5 @@
 import './Mercato.css';
+import { safePublicUrl } from "../../lib/safeUrl";
 
 /* Las categorías pueden llegar como texto o como objeto: se aceptan ambos formatos. */
 const categoryLabel = (c) =>
@@ -63,7 +64,7 @@ export default function Mercato(props) {
         <nav className="mercato-nav" aria-label="Secciones del sitio">
           <div className="mercato-container mercato-nav__inner">
             {navigation.map((item) => (
-              <a key={item.id || item.href} href={item.href}>
+              <a key={item.id || item.href} href={safePublicUrl(item.href)}>
                 {item.label}
               </a>
             ))}

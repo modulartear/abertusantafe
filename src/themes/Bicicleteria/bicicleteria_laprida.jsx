@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./bicicleteria_laprida.css";
+import { safePublicUrl } from "../../lib/safeUrl";
 
 /* Animaciones de entrada al hacer scroll (IntersectionObserver nativo, sin librerías) */
 function useReveal() {
@@ -97,7 +98,7 @@ export default function BicicleteriaLaprida(props) {
       <nav className="bl-nav" aria-label="Navegación principal">
         <div className="bl-container bl-nav__inner">
           {navigation.map((item) => (
-            <a key={item.id || item.href} href={item.href}>
+              <a key={item.id || item.href} href={safePublicUrl(item.href)}>
               {item.label}
             </a>
           ))}
